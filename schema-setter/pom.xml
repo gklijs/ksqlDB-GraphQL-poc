@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>tech.gklijs.kgpoc</groupId>
+    <artifactId>schema_setter</artifactId>
+    <name>Schema setter</name>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <confluent-platform.version>6.1.0</confluent-platform.version>
+        <schema-registry-url>http://127.0.0.1:8081</schema-registry-url>
+    </properties>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>confluent</id>
+            <name>confluent</name>
+            <url>https://packages.confluent.io/maven</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+                <version>${confluent-platform.version}</version>
+                <configuration>
+                    <schemaRegistryUrls>
+                        <param>${schema-registry-url}</param>
+                    </schemaRegistryUrls>
+                    <outputDirectory>schemas</outputDirectory>
+                    <subjects>
+                        <date.proto>src/main/proto/date.proto</date.proto>
+                        <persons-value>src/main/proto/person.proto</persons-value>
+                        <groups-value>src/main/proto/group.proto</groups-value>
+                    </subjects>
+                    <schemaTypes>
+                        <date.proto>PROTOBUF</date.proto>
+                        <persons-value>PROTOBUF</persons-value>
+                        <groups-value>PROTOBUF</groups-value>
+                    </schemaTypes>
+                    <references>
+                        <persons-value>
+                            <reference>
+                                <name>date.proto</name>
+                                <subject>date.proto</subject>
+                                <version>1</version>
+                            </reference>
+                        </persons-value>
+                    </references>
+                </configuration>
+                <goals>
+                    <goal>register</goal>
+                </goals>
+            </plugin>
+        </plugins>
+    </build>
+</project>

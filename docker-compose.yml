@@ -79,5 +79,31 @@ services:
       KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: 'true'
       KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: 'true'
       CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
+    mem_limit: 1000m
+    restart: always
+
+  set-topics:
+    image: confluentinc/cp-kafka:6.1.0
+    container_name: set-topics
+    depends_on:
+      - kafka
+    command: >
+      bash -c "kafka-topics --create --topic persons --bootstrap-server kafka:19092 --partitions 1 --replication-factor 1 --config cleanup.policy=compact
+      && kafka-topics --create --topic groups --bootstrap-server kafka:19092 --partitions 1 --replication-factor 1 --config cleanup.policy=compact"
+    restart: on-failure
+
+  schema-setter:
+    build:
+      context: schema-setter
+    container_name: schema-setter
+    depends_on:
+      - schema-registry
+    volumes:
+      - "${HOME}/.m2:/root/.m2"
+    environment:
+      SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+    mem_limit: 400m
+    restart: on-failure
+
 
 

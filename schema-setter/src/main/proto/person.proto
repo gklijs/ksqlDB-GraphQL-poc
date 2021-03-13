@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package tech.gklijs.kgpoc;
+import "date.proto";
+
+message Person {
+  string key = 1;
+  string first_name = 2;
+  string last_name = 3;
+  .tech.gklijs.kgpoc.Date birthday = 4;
+}
