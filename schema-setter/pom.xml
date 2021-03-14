@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>tech.gklijs.kgpoc</groupId>
-    <artifactId>schema_setter</artifactId>
+    <artifactId>schema-setter</artifactId>
     <name>Schema setter</name>
     <version>0.0.1-SNAPSHOT</version>
 

@@ -1,2 +1,4 @@
 .idea
 *.iml
+js-graphql-endpoint/node_modules
+js-graphql-endpoint/dist

@@ -1,0 +1,35 @@
+{
+  "name": "js-graphql-endpoint",
+  "version": "0.0.1",
+  "description": "GraphQL endpoint based on https://github.com/confluentinc/ksqldb-graphql",
+  "main": "src/app.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gklijs/grpc-binary-poc"
+  },
+  "author": "Gerard Klijs",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsc && node dist/app.js",
+    "build": "tsc -p .",
+    "lint": "eslint src/** --fix"
+  },
+  "private": true,
+  "dependencies": {
+    "@confluentinc/ksqldb-graphql": "^0.2.4",
+    "apollo-server": "^2.21.1",
+    "graphql": "14.7.0",
+    "ts-node": "^9.1.1"
+  },
+  "peerDependencies": {},
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.17.0",
+    "@typescript-eslint/parser": "^4.17.0",
+    "eslint": "^7.22.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "typescript": "^4.2.3"
+  }
+}
