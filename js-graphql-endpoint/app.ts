@@ -2,9 +2,9 @@ import { connect } from 'http2'
 import { ApolloServer, addResolveFunctionsToSchema } from 'apollo-server'
 import { generateGraphQL } from '@confluentinc/ksqldb-graphql'
 
-const session = connect('http://localhost:8088')
+const session = connect('http://ksqldb:8088')
 const options = {
-  hostname: 'localhost',
+  hostname: 'ksqldb',
   port: 8088
 }
 

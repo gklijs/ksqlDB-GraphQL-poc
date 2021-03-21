@@ -7,5 +7,15 @@
     "sourceMap": true,
     "outDir": "dist"
   },
-  "lib": ["es2015"]
+  "include": [
+    "app.ts",
+    "node_modules/@confluentinc/ksqldb-client/index.ts",
+    "node_modules/@confluentinc/ksqldb-client/src/ddl.ts",
+    "node_modules/@confluentinc/ksqldb-client/src/queryStream.ts",
+    "node_modules/@confluentinc/ksqldb-graphql/index.ts",
+    "node_modules/@confluentinc/ksqldb-graphql/src/graphQLObjectTypes.ts",
+    "node_modules/@confluentinc/ksqldb-graphql/src/requester.ts",
+    "node_modules/@confluentinc/ksqldb-graphql/src/resolvers.ts",
+    "node_modules/@confluentinc/ksqldb-graphql/src/schema.ts",
+  ]
 }

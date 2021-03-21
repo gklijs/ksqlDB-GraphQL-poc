@@ -105,5 +105,16 @@ services:
     mem_limit: 400m
     restart: on-failure
 
+  js-graphql-endpoint:
+    build:
+      context: js-graphql-endpoint
+    container_name: js-graphql-endpoint
+    ports:
+      - "4000:4000"
+    depends_on:
+      - ksqldb
+    mem_limit: 400m
+    restart: on-failure
+
 
 
