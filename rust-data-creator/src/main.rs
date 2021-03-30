@@ -20,26 +20,30 @@ fn create_person() -> items::Person {
     }
 }
 
-fn create_group() -> items::Group {
-    items::Group{
-        id: String::from("germans"),
-        members: vec![String::from("vla_pak")],
+fn create_address_update() -> items::AddressUpdate {
+    items::AddressUpdate{
+        country: String::from("Germany"),
+        persons: vec![String::from("vla_pak")],
+        addresses: vec![items::Address {
+            street: String::from("Somewhere 12"),
+            city: String::from("Keulen"),
+        }],
     }
 }
 
 # [tokio::main]
 async fn main() {
     let person = create_person();
-    let group = create_group();
+    let adress_update = create_address_update();
     println!("person: {:?}", person);
-    println!("group: {:?}", group);
+    println!("adress update: {:?}", adress_update);
     let mut buf_person: Vec<u8> = Vec::with_capacity(person.encoded_len());
     person.encode(&mut buf_person).ok();
     println!("person: {:?}", buf_person);
-    let mut buf_group: Vec<u8> = Vec::with_capacity(group.encoded_len());
-    group.encode(&mut buf_group).ok();
-    println!("group: {:?}", buf_group);
+    let mut buf_address_update: Vec<u8> = Vec::with_capacity(adress_update.encoded_len());
+    adress_update.encode(&mut buf_address_update).ok();
+    println!("adress update: {:?}", buf_address_update);
     let mut producer = get_producer("127.0.0.1:9092", String::from("http://localhost:8081"));
     producer.send_proto(person.id.as_bytes().to_vec(), buf_person, Name::Person).await;
-    producer.send_proto(group.id.as_bytes().to_vec(), buf_group, Name::Group).await;
+    producer.send_proto(adress_update.country.as_bytes().to_vec(), buf_address_update, Name::AdressUpdate).await;
 }

@@ -1,8 +1,0 @@
-syntax = "proto3";
-
-package tech.gklijs.kgpoc;
-
-message Group {
-  string id = 1;
-  repeated string members = 2;
-}

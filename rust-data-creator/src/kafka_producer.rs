@@ -11,20 +11,20 @@ pub struct RecordProducer<'a> {
 
 pub enum Name{
     Person,
-    Group,
+    AdressUpdate,
 }
 
 fn get_full_name(name: &Name) -> &'static str{
     match name {
         Name::Person => "tech.gklijs.kgpoc.Person",
-        Name::Group => "tech.gklijs.kgpoc.Group",
+        Name::AdressUpdate => "tech.gklijs.kgpoc.AddressUpdate",
     }
 }
 
 fn get_topic(name: &Name) -> &'static str{
     match name {
         Name::Person => "persons",
-        Name::Group => "groups",
+        Name::AdressUpdate => "address-updates",
     }
 }
 

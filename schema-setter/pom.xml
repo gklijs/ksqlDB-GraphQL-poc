@@ -35,13 +35,15 @@
                     <outputDirectory>schemas</outputDirectory>
                     <subjects>
                         <date.proto>src/main/proto/date.proto</date.proto>
+                        <address.proto>src/main/proto/address.proto</address.proto>
                         <persons-value>src/main/proto/person.proto</persons-value>
-                        <groups-value>src/main/proto/group.proto</groups-value>
+                        <address-updates-value>src/main/proto/adressUpdate.proto</address-updates-value>
                     </subjects>
                     <schemaTypes>
                         <date.proto>PROTOBUF</date.proto>
+                        <address.proto>PROTOBUF</address.proto>
                         <persons-value>PROTOBUF</persons-value>
-                        <groups-value>PROTOBUF</groups-value>
+                        <address-updates-value>PROTOBUF</address-updates-value>
                     </schemaTypes>
                     <references>
                         <persons-value>
@@ -51,6 +53,13 @@
                                 <version>1</version>
                             </reference>
                         </persons-value>
+                        <address-updates-value>
+                            <reference>
+                                <name>address.proto</name>
+                                <subject>address.proto</subject>
+                                <version>1</version>
+                            </reference>
+                        </address-updates-value>
                     </references>
                 </configuration>
                 <goals>

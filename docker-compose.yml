@@ -89,7 +89,7 @@ services:
       - kafka
     command: >
       bash -c "kafka-topics --create --topic persons --bootstrap-server kafka:19092 --partitions 1 --replication-factor 1 --config cleanup.policy=compact
-      && kafka-topics --create --topic groups --bootstrap-server kafka:19092 --partitions 1 --replication-factor 1 --config cleanup.policy=compact"
+      && kafka-topics --create --topic address-updates --bootstrap-server kafka:19092 --partitions 1 --replication-factor 1 --config cleanup.policy=compact"
     restart: on-failure
 
   schema-setter:
