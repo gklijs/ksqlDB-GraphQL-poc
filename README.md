@@ -7,13 +7,3 @@ No materialized views have been registered. Register materialized views in order
 `js-graphql-endpoint` draait op [http://localhost:4000](http://localhost:4000)
 
 Open interactive ksql promt: `docker exec -it ksqldb ksql http://ksqldb:8088`
-
-todo in ksqldb
-
-`CREATE TABLE persons (id_key STRING PRIMARY KEY) WITH (KAFKA_TOPIC = 'persons', VALUE_FORMAT = 'PROTOBUF') EMIT CHANGES;`
-
-`CREATE STREAM address_updates (country_id STRING KEY) WITH (KAFKA_TOPIC = 'address-updates', VALUE_FORMAT = 'PROTOBUF') EMIT CHANGES;`
-
-`CREATE STREAM exploded_address_updates AS SELECT country_id, country, EXPLODE(persons) AS person_id, EXPLODE(addresses) AS address FROM address_updates EMIT CHANGES;`
-
-`CREATE STREAM persons_with_address AS SELECT persons.id_key AS id, persons.first_name as first_name, persons.birthday as birthday, country, address FROM exploded_address_updates JOIN persons ON exploded_address_updates.person_id = persons.id_key EMIT CHANGES`
