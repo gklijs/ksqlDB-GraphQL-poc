@@ -1036,7 +1036,6 @@ dependencies = [
  "rdkafka",
  "reqwest",
  "schema_registry_converter",
- "serde_json",
  "tokio",
 ]
 
