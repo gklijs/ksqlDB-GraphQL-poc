@@ -42,7 +42,7 @@ pub async fn set_data() {
     let mut buf_address_update: Vec<u8> = Vec::with_capacity(adress_update.encoded_len());
     adress_update.encode(&mut buf_address_update).ok();
     println!("adress update: {:?}", buf_address_update);
-    let mut producer = get_producer("127.0.0.1:9092", String::from("http://localhost:8081"));
+    let mut producer = get_producer("kafka:9092", String::from("http://schema-registry:8081"));
     producer.send_proto(person.id.as_bytes().to_vec(), buf_person, Name::Person).await;
     producer.send_proto(adress_update.country.as_bytes().to_vec(), buf_address_update, Name::AdressUpdate).await;
 }

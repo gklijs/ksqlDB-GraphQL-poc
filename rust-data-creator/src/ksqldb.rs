@@ -2,7 +2,7 @@ use ksqldb::KsqlDB;
 use reqwest::Client;
 
 pub async fn create_streams_and_tables() {
-    let ksql = KsqlDB::new("localhost:8088".into(), Client::builder(), false).unwrap();
+    let ksql = KsqlDB::new("ksqldb:8088".into(), Client::builder(), false).unwrap();
     let query = r#"
     CREATE TABLE persons (id_key STRING PRIMARY KEY) WITH (KAFKA_TOPIC = 'persons', VALUE_FORMAT = 'PROTOBUF');
     CREATE STREAM address_updates (country_id STRING KEY) WITH (KAFKA_TOPIC = 'address-updates', VALUE_FORMAT = 'PROTOBUF');

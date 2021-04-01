@@ -105,6 +105,15 @@ services:
     mem_limit: 400m
     restart: on-failure
 
+  rust-data-creator:
+    build:
+      context: rust-data-creator
+    container_name: rust-data-creator
+    depends_on:
+      - ksqldb
+    mem_limit: 100m
+    restart: on-failure
+
   js-graphql-endpoint:
     build:
       context: js-graphql-endpoint
@@ -113,6 +122,8 @@ services:
       - "4000:4000"
     depends_on:
       - ksqldb
+      - schema-setter
+      - rust-data-creator
     mem_limit: 400m
     restart: on-failure
 
