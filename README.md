@@ -2,8 +2,10 @@
 
 Setup to serve as proof of concept in using Kafka with ksqlDB in combination with the query language GraphQL.
 
-No materialized views have been registered. Register materialized views in order to use pull queries. Refer to https://cnfl.io/queries for info on query types.
-
-`js-graphql-endpoint` draait op [http://localhost:4000](http://localhost:4000)
+`js-graphql-endpoint` runs on [http://localhost:4000](http://localhost:4000) (once it can handle references)
 
 Open interactive ksql promt: `docker exec -it ksqldb ksql http://ksqldb:8088`
+
+The `data-producer` is updating every 5 seconds, which causes all the persons in the update to update.
+
+See the results: `kafka-protobuf-console-consumer --topic PERSONS_WITH_ADDRESS --bootstrap-server localhost:9092 --from-beginning`

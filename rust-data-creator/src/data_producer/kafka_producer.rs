@@ -30,7 +30,7 @@ fn get_topic(name: &Name) -> &'static str{
 
 impl RecordProducer <'_>{
     pub async fn send_proto(
-        &'_ mut self,
+        &mut self,
         key_bytes: Vec<u8>,
         value_bytes: Vec<u8>,
         name: Name,

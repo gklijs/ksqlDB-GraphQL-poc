@@ -3,7 +3,7 @@ version: "2.2"
 services:
 
   zk:
-    image: confluentinc/cp-zookeeper:6.1.0
+    image: confluentinc/cp-zookeeper:6.1.1
     hostname: zk
     container_name: zk
     ports:
@@ -15,7 +15,7 @@ services:
     restart: always
 
   kafka:
-    image: confluentinc/cp-kafka:6.1.0
+    image: confluentinc/cp-kafka:6.1.1
     hostname: kafka
     container_name: kafka
     ports:
@@ -44,7 +44,7 @@ services:
     restart: always
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:6.1.0
+    image: confluentinc/cp-schema-registry:6.1.1
     hostname: schema-registry
     container_name: schema-registry
     ports:
@@ -59,7 +59,7 @@ services:
     restart: always
 
   ksqldb:
-    image: confluentinc/cp-ksqldb-server:6.1.0
+    image: confluentinc/cp-ksqldb-server:6.1.1
     hostname: ksqldb
     container_name: ksqldb
     ports:
@@ -83,13 +83,13 @@ services:
     restart: always
 
   set-topics:
-    image: confluentinc/cp-kafka:6.1.0
+    image: confluentinc/cp-kafka:6.1.1
     container_name: set-topics
     depends_on:
       - kafka
     command: >
-      bash -c "kafka-topics --create --topic persons --bootstrap-server kafka:19092 --partitions 1 --replication-factor 1 --config cleanup.policy=compact
-      && kafka-topics --create --topic address-updates --bootstrap-server kafka:19092 --partitions 1 --replication-factor 1 --config cleanup.policy=compact"
+      bash -c "kafka-topics --create --topic persons --bootstrap-server kafka:19092 --partitions 1 --replication-factor 1 --config cleanup.policy=compact --if-not-exists
+      && kafka-topics --create --topic address-updates --bootstrap-server kafka:19092 --partitions 1 --replication-factor 1 --config cleanup.policy=compact --if-not-exists"
     restart: on-failure
 
   schema-setter:
@@ -111,6 +111,10 @@ services:
     container_name: rust-data-creator
     depends_on:
       - ksqldb
+    environment:
+      KSQL_URL: "ksqldb:8088"
+      KAFKA_BROKERS: "kafka:19092"
+      SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
     mem_limit: 100m
     restart: on-failure
 

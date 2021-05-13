@@ -1,6 +1,7 @@
 use crate::ksqldb::create_streams_and_tables;
-use crate::data_producer::set_data;
-use std::{thread, time};
+use crate::data_producer::create_data;
+use tokio::time::sleep;
+use tokio::time;
 
 mod ksqldb;
 mod data_producer;
@@ -8,6 +9,6 @@ mod data_producer;
 # [tokio::main]
 async fn main() {
     create_streams_and_tables().await;
-    thread::sleep(time::Duration::from_secs(10));
-    set_data().await;
+    sleep(time::Duration::from_secs(10)).await;
+    create_data().await;
 }
