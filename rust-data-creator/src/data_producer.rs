@@ -2,9 +2,9 @@ extern crate prost;
 
 use crate::data_producer::kafka_producer::{get_producer, Name, RecordProducer};
 use crate::data_producer::prost::Message;
-use tokio::time::sleep;
-use tokio::time;
 use std::env;
+use tokio::time;
+use tokio::time::sleep;
 
 mod items {
     include!(concat!(env!("OUT_DIR"), "/tech.gklijs.kgpoc.rs"));
@@ -30,7 +30,7 @@ fn get_country(nr: i32) -> String {
         0 => String::from("Germany"),
         1 => String::from("Netherlands"),
         2 => String::from("Belgium"),
-        _ => String::from("Sweden")
+        _ => String::from("Sweden"),
     }
 }
 
@@ -65,15 +65,19 @@ fn get_persons(nr: i32) -> Vec<String> {
 }
 
 fn get_city(nr: i32) -> String {
-    match nr % 8 {
+    match nr % 12 {
         0 => String::from("Berlin"),
         1 => String::from("Amsterdam"),
         2 => String::from("Antwerp"),
         3 => String::from("Stockholm"),
         4 => String::from("Bonn"),
         5 => String::from("Utrecht"),
-        6 => String::from("Brussel"),
-        _ => String::from("Norje")
+        6 => String::from("Brussels"),
+        7 => String::from("Gothenburg"),
+        8 => String::from("Hamburg"),
+        9 => String::from("Rotterdam"),
+        10 => String::from("Bruges"),
+        _ => String::from("Norje"),
     }
 }
 
@@ -103,7 +107,9 @@ async fn send_person(mut producer: RecordProducer<'_>, nr: i32) -> RecordProduce
     let person = create_person(nr);
     let mut buf_person: Vec<u8> = Vec::with_capacity(person.encoded_len());
     person.encode(&mut buf_person).ok();
-    producer.send_proto(person.id.as_bytes().to_vec(), buf_person, Name::Person).await;
+    producer
+        .send_proto(person.id.as_bytes().to_vec(), buf_person, Name::Person)
+        .await;
     println!("person for nr: {}, was added.", nr);
     producer
 }
@@ -112,14 +118,21 @@ async fn send_address_update(mut producer: RecordProducer<'_>, nr: i32) -> Recor
     let address_update = create_address_update(nr);
     let mut buf_address_update: Vec<u8> = Vec::with_capacity(address_update.encoded_len());
     address_update.encode(&mut buf_address_update).ok();
-    producer.send_proto(address_update.country.as_bytes().to_vec(), buf_address_update, Name::AdressUpdate).await;
+    producer
+        .send_proto(
+            address_update.country.as_bytes().to_vec(),
+            buf_address_update,
+            Name::AdressUpdate,
+        )
+        .await;
     println!("address_update for nr: {}, was added.", nr);
     producer
 }
 
 pub async fn create_data() {
-    let brokers = env::var("KAFKA_BROKERS").unwrap_or(String::from("localhost:9092"));
-    let schema_registry_url = env::var("SCHEMA_REGISTRY_URL").unwrap_or(String::from("http://localhost:8081"));
+    let brokers = env::var("KAFKA_BROKERS").unwrap_or_else(|_| String::from("localhost:9092"));
+    let schema_registry_url =
+        env::var("SCHEMA_REGISTRY_URL").unwrap_or_else(|_| String::from("http://localhost:8081"));
     let mut producer = get_producer(&*brokers, schema_registry_url);
     for nr in 0..20 {
         producer = send_person(producer, nr).await

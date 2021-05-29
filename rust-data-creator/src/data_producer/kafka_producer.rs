@@ -9,34 +9,34 @@ pub struct RecordProducer<'a> {
     proto_encoder: ProtoRawEncoder<'a>,
 }
 
-pub enum Name{
+pub enum Name {
     Person,
     AdressUpdate,
 }
 
-fn get_full_name(name: &Name) -> &'static str{
+fn get_full_name(name: &Name) -> &'static str {
     match name {
         Name::Person => "tech.gklijs.kgpoc.Person",
         Name::AdressUpdate => "tech.gklijs.kgpoc.AddressUpdate",
     }
 }
 
-fn get_topic(name: &Name) -> &'static str{
+fn get_topic(name: &Name) -> &'static str {
     match name {
         Name::Person => "persons",
         Name::AdressUpdate => "address-updates",
     }
 }
 
-impl RecordProducer <'_>{
-    pub async fn send_proto(
-        &mut self,
-        key_bytes: Vec<u8>,
-        value_bytes: Vec<u8>,
-        name: Name,
-    ) {
-        let value_strategy= SubjectNameStrategy::TopicNameStrategy(String::from(get_topic(&name)), false);
-        let payload = match self.proto_encoder.encode(&*value_bytes, get_full_name(&name), value_strategy).await {
+impl RecordProducer<'_> {
+    pub async fn send_proto(&mut self, key_bytes: Vec<u8>, value_bytes: Vec<u8>, name: Name) {
+        let value_strategy =
+            SubjectNameStrategy::TopicNameStrategy(String::from(get_topic(&name)), false);
+        let payload = match self
+            .proto_encoder
+            .encode(&*value_bytes, get_full_name(&name), value_strategy)
+            .await
+        {
             Ok(v) => v,
             Err(e) => panic!("Error getting payload: {}", e),
         };
@@ -48,7 +48,12 @@ impl RecordProducer <'_>{
             timestamp: None,
             headers: None,
         };
-        self.producer.send_result(fr).unwrap().await.unwrap().unwrap();
+        self.producer
+            .send_result(fr)
+            .unwrap()
+            .await
+            .unwrap()
+            .unwrap();
     }
 }
 
