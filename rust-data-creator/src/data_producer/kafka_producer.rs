@@ -9,33 +9,18 @@ pub struct RecordProducer {
     proto_encoder: EasyProtoRawEncoder,
 }
 
-pub enum Name {
-    Person,
-    AdressUpdate,
-}
-
-fn get_topic(name: &Name) -> &'static str {
-    match name {
-        Name::Person => "persons",
-        Name::AdressUpdate => "address-updates",
-    }
-}
-
 impl RecordProducer {
-    pub async fn send_proto(&self, key_bytes: Vec<u8>, value_bytes: Vec<u8>, name: Name) {
-        let value_strategy =
-            SubjectNameStrategy::TopicNameStrategy(String::from(get_topic(&name)), false);
+    pub async fn send_person(&self, key_bytes: Vec<u8>, value_bytes: Vec<u8>) {
+        let value_strategy = SubjectNameStrategy::TopicNameStrategy(String::from("persons"), false);
         let payload = match self
             .proto_encoder
-            .encode_single_message(&*value_bytes,  value_strategy)
+            .encode_single_message(&*value_bytes, value_strategy)
             .await
         {
             Ok(v) => v,
             Err(e) => panic!("Error getting payload: {}", e),
         };
-        let br = BaseRecord::to(get_topic(&name))
-            .payload(&payload)
-            .key(&key_bytes);
+        let br = BaseRecord::to("persons").payload(&payload).key(&key_bytes);
         self.producer.send(br).unwrap();
     }
 }

@@ -42,33 +42,11 @@
                     </schemaRegistryUrls>
                     <outputDirectory>schemas</outputDirectory>
                     <subjects>
-                        <date.proto>src/main/proto/date.proto</date.proto>
-                        <address.proto>src/main/proto/address.proto</address.proto>
                         <persons-value>src/main/proto/person.proto</persons-value>
-                        <address-updates-value>src/main/proto/adressUpdate.proto</address-updates-value>
                     </subjects>
                     <schemaTypes>
-                        <date.proto>PROTOBUF</date.proto>
-                        <address.proto>PROTOBUF</address.proto>
                         <persons-value>PROTOBUF</persons-value>
-                        <address-updates-value>PROTOBUF</address-updates-value>
                     </schemaTypes>
-                    <references>
-                        <persons-value>
-                            <reference>
-                                <name>date.proto</name>
-                                <subject>date.proto</subject>
-                                <version>1</version>
-                            </reference>
-                        </persons-value>
-                        <address-updates-value>
-                            <reference>
-                                <name>address.proto</name>
-                                <subject>address.proto</subject>
-                                <version>1</version>
-                            </reference>
-                        </address-updates-value>
-                    </references>
                 </configuration>
                 <goals>
                     <goal>register</goal>
