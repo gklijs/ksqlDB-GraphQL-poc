@@ -1,8 +1,0 @@
-syntax = "proto3";
-
-package tech.gklijs.kgpoc;
-
-message Address {
-  string street = 1;
-  string city = 2;
-}

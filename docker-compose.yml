@@ -88,8 +88,7 @@ services:
     depends_on:
       - kafka
     command: >
-      bash -c "kafka-topics --create --topic persons --bootstrap-server kafka:19092 --partitions 1 --replication-factor 1 --config cleanup.policy=compact --if-not-exists
-      && kafka-topics --create --topic address-updates --bootstrap-server kafka:19092 --partitions 1 --replication-factor 1 --config cleanup.policy=compact --if-not-exists"
+      bash -c "kafka-topics --create --topic persons --bootstrap-server kafka:19092 --partitions 1 --replication-factor 1 --config cleanup.policy=compact --if-not-exists"
     restart: on-failure
 
   schema-setter:
