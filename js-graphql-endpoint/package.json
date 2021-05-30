@@ -10,7 +10,7 @@
   "author": "Gerard Klijs",
   "license": "MIT",
   "scripts": {
-    "start": "tsc && node dist/app.js",
+    "start": "tsc && NODE_OPTIONS='--unhandled-rejections=strict' node dist/app.js",
     "build": "tsc -p .",
     "lint": "eslint src/** --fix"
   },
