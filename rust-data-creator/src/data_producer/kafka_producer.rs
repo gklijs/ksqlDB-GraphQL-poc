@@ -1,12 +1,12 @@
 use rdkafka::config::ClientConfig;
-use rdkafka::producer::{FutureProducer, FutureRecord};
-use schema_registry_converter::async_impl::proto_raw::ProtoRawEncoder;
+use rdkafka::producer::{BaseRecord, DefaultProducerContext, ThreadedProducer};
+use schema_registry_converter::async_impl::easy_proto_raw::EasyProtoRawEncoder;
 use schema_registry_converter::async_impl::schema_registry::SrSettings;
 use schema_registry_converter::schema_registry_common::SubjectNameStrategy;
 
-pub struct RecordProducer<'a> {
-    producer: FutureProducer,
-    proto_encoder: ProtoRawEncoder<'a>,
+pub struct RecordProducer {
+    producer: ThreadedProducer<DefaultProducerContext>,
+    proto_encoder: EasyProtoRawEncoder,
 }
 
 pub enum Name {
@@ -28,8 +28,8 @@ fn get_topic(name: &Name) -> &'static str {
     }
 }
 
-impl RecordProducer<'_> {
-    pub async fn send_proto(&mut self, key_bytes: Vec<u8>, value_bytes: Vec<u8>, name: Name) {
+impl RecordProducer {
+    pub async fn send_proto(&self, key_bytes: Vec<u8>, value_bytes: Vec<u8>, name: Name) {
         let value_strategy =
             SubjectNameStrategy::TopicNameStrategy(String::from(get_topic(&name)), false);
         let payload = match self
@@ -40,25 +40,15 @@ impl RecordProducer<'_> {
             Ok(v) => v,
             Err(e) => panic!("Error getting payload: {}", e),
         };
-        let fr = FutureRecord {
-            topic: get_topic(&name),
-            partition: None,
-            payload: Some(&payload),
-            key: Some(&key_bytes),
-            timestamp: None,
-            headers: None,
-        };
-        self.producer
-            .send_result(fr)
-            .unwrap()
-            .await
-            .unwrap()
-            .unwrap();
+        let br = BaseRecord::to(get_topic(&name))
+            .payload(&payload)
+            .key(&key_bytes);
+        self.producer.send(br).unwrap();
     }
 }
 
 pub fn get_producer(brokers: &str, schema_registry_url: String) -> RecordProducer {
-    let producer: FutureProducer = ClientConfig::new()
+    let producer: ThreadedProducer<DefaultProducerContext> = ClientConfig::new()
         .set("bootstrap.servers", brokers)
         .set("produce.offset.report", "true")
         .set("message.timeout.ms", "60000")
@@ -67,7 +57,7 @@ pub fn get_producer(brokers: &str, schema_registry_url: String) -> RecordProduce
         .expect("Producer creation error");
 
     let sr_settings = SrSettings::new(schema_registry_url);
-    let proto_encoder = ProtoRawEncoder::new(sr_settings);
+    let proto_encoder = EasyProtoRawEncoder::new(sr_settings);
     RecordProducer {
         producer,
         proto_encoder,

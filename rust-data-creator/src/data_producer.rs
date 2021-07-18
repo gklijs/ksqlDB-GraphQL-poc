@@ -103,7 +103,7 @@ fn create_address_update(nr: i32) -> items::AddressUpdate {
     }
 }
 
-async fn send_person(mut producer: RecordProducer<'_>, nr: i32) -> RecordProducer<'_> {
+async fn send_person(producer: &RecordProducer, nr: i32) {
     let person = create_person(nr);
     let mut buf_person: Vec<u8> = Vec::with_capacity(person.encoded_len());
     person.encode(&mut buf_person).ok();
@@ -111,10 +111,9 @@ async fn send_person(mut producer: RecordProducer<'_>, nr: i32) -> RecordProduce
         .send_proto(person.id.as_bytes().to_vec(), buf_person, Name::Person)
         .await;
     println!("person for nr: {}, was added.", nr);
-    producer
 }
 
-async fn send_address_update(mut producer: RecordProducer<'_>, nr: i32) -> RecordProducer<'_> {
+async fn send_address_update(producer: &RecordProducer, nr: i32) {
     let address_update = create_address_update(nr);
     let mut buf_address_update: Vec<u8> = Vec::with_capacity(address_update.encoded_len());
     address_update.encode(&mut buf_address_update).ok();
@@ -126,19 +125,18 @@ async fn send_address_update(mut producer: RecordProducer<'_>, nr: i32) -> Recor
         )
         .await;
     println!("address_update for nr: {}, was added.", nr);
-    producer
 }
 
 pub async fn create_data() {
     let brokers = env::var("KAFKA_BROKERS").unwrap_or_else(|_| String::from("localhost:9092"));
     let schema_registry_url =
         env::var("SCHEMA_REGISTRY_URL").unwrap_or_else(|_| String::from("http://localhost:8081"));
-    let mut producer = get_producer(&*brokers, schema_registry_url);
+    let producer = get_producer(&*brokers, schema_registry_url);
     for nr in 0..20 {
-        producer = send_person(producer, nr).await
+        send_person(&producer, nr).await
     }
     for nr in 0..10000 {
         sleep(time::Duration::from_secs(5)).await;
-        producer = send_address_update(producer, nr).await
+        send_address_update(&producer, nr).await
     }
 }
