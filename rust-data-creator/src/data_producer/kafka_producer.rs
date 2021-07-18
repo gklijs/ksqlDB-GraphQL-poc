@@ -14,13 +14,6 @@ pub enum Name {
     AdressUpdate,
 }
 
-fn get_full_name(name: &Name) -> &'static str {
-    match name {
-        Name::Person => "tech.gklijs.kgpoc.Person",
-        Name::AdressUpdate => "tech.gklijs.kgpoc.AddressUpdate",
-    }
-}
-
 fn get_topic(name: &Name) -> &'static str {
     match name {
         Name::Person => "persons",
@@ -34,7 +27,7 @@ impl RecordProducer {
             SubjectNameStrategy::TopicNameStrategy(String::from(get_topic(&name)), false);
         let payload = match self
             .proto_encoder
-            .encode(&*value_bytes, get_full_name(&name), value_strategy)
+            .encode_single_message(&*value_bytes,  value_strategy)
             .await
         {
             Ok(v) => v,
